@@ -1,0 +1,48 @@
+<div class="card w-full h-full overflow-hidden" [ngClass]="{ 'fullscreen': isFullscreen }">
+    <p-galleria
+        #galleria
+        [value]="images"
+        [(activeIndex)]="activeIndex"
+        [numVisible]="5"
+        [showThumbnails]="showThumbnails"
+        [showItemNavigators]="true"
+        [showItemNavigatorsOnHover]="true"
+        [circular]="true"
+        [autoPlay]="true"
+        [transitionInterval]="3000"
+        [style]="{ width: '100%', height: '100%' }"
+        [containerStyle]="{ width: '100%', height: '100%' }"
+        [responsiveOptions]="responsiveOptions"
+        [containerClass]="'custom-galleria' + (isFullscreen ? ' fullscreen' : '')"
+    >
+        <ng-template pTemplate="item" let-item>
+            <div class="galleria-image-wrapper">
+                <img
+                        class="galleria-img"
+                        [src]="item.itemImageSrc"
+                        alt="سعکسی وجود ندارد"
+                />
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="thumbnail" let-item>
+            <div class="grid grid-nogutter justify-content-center footer-galleria-image-wrapper thumbnail-wrapper">
+                <img class="galleria-img" [src]="item.thumbnailImageSrc"  alt="عکسی وجود ندارد"/>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <div class="title-container custom-galleria-footer">
+                <button type="button" pButton icon="pi pi-list" (click)="onThumbnailButtonClick()">
+                </button>
+                <span *ngIf="images" class="title-container">
+          <span>{{ activeIndex + 1 }}/{{ images.length }}</span>
+          <span class="title"> {{ images[activeIndex]?.title }}</span>
+        </span>
+                <button type="button" pButton [icon]="fullScreenIcon()" (click)="toggleFullScreen()"
+                        class="fullscreen-button">
+                </button>
+            </div>
+        </ng-template>
+    </p-galleria>
+</div>

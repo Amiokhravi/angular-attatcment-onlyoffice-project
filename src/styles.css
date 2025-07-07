@@ -1,0 +1,28 @@
+body {
+  direction: rtl;
+  text-align: right;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+.p-toolbar-group-left {
+  justify-content: flex-end;
+}
+
+.p-toolbar-group-right {
+  justify-content: flex-start;
+}
+
+
+
+.p-tree button.p-button-text {
+  color: #999;
+}
+
+.p-tree button.p-button-text:hover {
+  filter: brightness(1.2);
+}
+.p-tree .p-treenode-content {
+  flex-direction: row-reverse !important; /* فلش بیاد سمت راست */
+  justify-content: space-between !important;
+  align-items: center !important;
+}

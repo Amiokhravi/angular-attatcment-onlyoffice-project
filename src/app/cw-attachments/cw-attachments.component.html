@@ -1,0 +1,98 @@
+<p-toolbar class="mb-3" styleClass="bg-gray-900 shadow-2">
+    <div class="p-toolbar-group-left">
+        <button pButton icon="pi pi-plus" label=" افزودن دسته " class="p-button"></button>
+        <!-- <button class="gap-1" pButton icon="pi pi-upload" label="آپلود فایل" (click)="openUpload()">
+        <p-fileUpload mode="basic" name="files[]" (onUpload)="handleUpload($event)"> </p-fileUpload> </button> -->
+        <span style="margin-left:5px;margin-top:2px;text-align: center"> </span>
+
+        <p-fileUpload mode="basic" chooseLabel="آپلود" chooseIcon="pi pi-upload" name="demo[]" url="" accept="image/*"
+                      maxFileSize="1000000" (click)="openUpload()"/>
+        <!-- (onUpload)="onUpload($event)" -->
+        <span style="margin-left:5px;margin-top:2px;text-align: center"> </span>
+        <button pButton icon="pi pi-folder-open" label="افزودن از پوشه"></button>
+        <!-- <button pButton icon="pi pi-cog" class="p-button-secondary" ></button> -->
+
+    </div>
+
+</p-toolbar>
+
+<div class="p-grid">
+    <!-- <p-sidebar [(visible)]="visibleSidebar" [modal]="false" position="left" [baseZIndex]="10000"></p-sidebar> -->
+    <aside class="p-col-12 p-md-3 ">
+        <p-tree [value]="nodes" selectionMode="single" [(selection)]="selectedNode"
+                (onNodeSelect)="treeClickEventHandle($event)" [virtualScroll]="true" [virtualScrollItemSize]="93"
+                scrollHeight="400px">
+            <ng-template let-node pTemplate="default">
+                <div class="w-full flex flex-row-reverse justify-between items-center gap-3">
+
+                    <!-- آیکون فلش و کنترل اصلی PrimeNG اتوماتیک اینجاست (سمت راست) -->
+
+                    <!-- بخش محتوای نود (آیکون و متن) -->
+                    <div class="flex flex-row-reverse items-center gap-2 overflow-hidden flex-grow">
+                        <!-- آیکون پوشه -->
+                        <i *ngIf="isFolder(node)" class="pi"
+                           [ngClass]="node.expanded ? node.expandedIcon : node.collapsedIcon"
+                           style="color: dodgerblue;"></i>
+
+                        <!-- آیکون فایل -->
+                        <ng-container *ngIf="!isFolder(node)">
+                            <ng-container *ngIf="getFileIcon(node) as icon">
+                                <ng-container *ngIf="icon.startsWith('pi'); else imageIcon">
+                                    <i [class]="icon"
+                                       [ngStyle]="{ color: getFileColor(node), 'font-size': '1.2rem', 'margin-right': '6px' }"></i>
+                                </ng-container>
+                                <ng-template #imageIcon>
+                                    <img [src]="icon" width="20" height="20" style="margin-right: 6px;"/>
+                                </ng-template>
+                            </ng-container>
+                        </ng-container>
+
+                        <!-- متن یا input ویرایش -->
+                        <span *ngIf="editingNode !== node"
+                              class="text-ellipsis whitespace-nowrap overflow-hidden max-w-[180px]">
+              {{ node.label }}
+            </span>
+
+                        <input *ngIf="editingNode === node" type="text" [(ngModel)]="editingLabel"
+                               (blur)="saveEdit(node)"
+                               class="p-inputtext-sm max-w-[180px]"/>
+                    </div>
+
+                    <!-- بخش آیکون‌های حذف و ویرایش (سمت چپ متن) -->
+                    <div class="flex items-center gap-1 flex-shrink-0 ms-auto">
+                        <button pButton type="button" icon="pi pi-pencil" class="p-button-text"
+                                [ngStyle]="{ color: hoverEdit === node.key ? 'gold' : '#999' }"
+                                (mouseenter)="hoverEdit = node.key"
+                                (mouseleave)="hoverEdit = null" (click)="toggleEdit(node)"></button>
+
+                        <button pButton type="button" icon="pi pi-trash" class="p-button-text"
+                                [ngStyle]="{ color: hoverDelete === node.key ? 'red' : '#999' }"
+                                (mouseenter)="hoverDelete = node.key"
+                                (mouseleave)="hoverDelete = null" (click)="deleteNode(node)"></button>
+                    </div>
+
+                </div>
+            </ng-template>
+
+
+        </p-tree>
+
+    </aside>
+
+
+    <section class="p-col-12 p-md-9 h-screen flex flex-col overflow-hidden">
+        <div class="flex-grow overflow-hidden">
+            <ng-container
+                    *ngIf="nodeData && nodeData.data && fileTypes.image.includes(nodeData.data.type); else onlyOffice">
+
+                <app-gallery [images]="images"  class="w-full h-screen block"></app-gallery>
+
+            </ng-container>
+            <ng-template #onlyOffice>
+                <app-onlyoffice-editor [nodeData]="nodeData"></app-onlyoffice-editor>
+            </ng-template>
+        </div>
+    </section>
+
+
+</div>
